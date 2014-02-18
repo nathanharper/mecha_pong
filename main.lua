@@ -3,9 +3,25 @@ require 'ball'
 paddles = {}
 balls = {}
 
+local fake_joystick = {
+  axis_map = {
+    [2] = {up='w', down='s'},
+    [5] = {up='up', down='down'}
+  },
+  getAxis = function(self, axis)
+    local dirs = self.axis_map[axis]
+    if love.keyboard.isDown(dirs.up) then
+      return -1
+    elseif love.keyboard.isDown(dirs.down) then
+      return 1
+    end
+    return 0
+  end
+}
+
 function love.load()
   win_w,win_h = love.window.getDimensions()
-  joystick = love.joystick.getJoysticks()[1]
+  joystick = love.joystick.getJoysticks()[1] or fake_joystick
   local height = win_h / 2 - Paddle.h / 2
   local x_off = 20
   paddles[1] = Paddle:new(x_off, height, 2)

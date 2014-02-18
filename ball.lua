@@ -42,9 +42,6 @@ function Ball:update(dt)
       elseif self.dx > 0 and right <= xr and right > xl then
         self.x = xl - Ball.radius; self:reverse()
       end
-      -- if p.dy > self.dy then
-      --   self.dy = p.dy
-      -- end
     end
   end
 
