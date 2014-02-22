@@ -2,6 +2,7 @@ require 'paddle'
 require 'ball'
 paddles = {}
 balls = {}
+-- setmetatable(balls, {__index = {filter=filter}})
 
 local fake_joystick = {
   axis_map = {
@@ -34,17 +35,20 @@ end
 function love.update(dt)
   for i in ipairs(paddles) do paddles[i]:update(dt) end
   local bl,br = 0,0 -- keep track of new balls to add
-  for i = 1, #balls do
-    balls[i]:update(dt)
-    if balls[i].destroyed then
-      if balls[i].destroyed == 'left' then
+
+  -- simultaneously filter and update balls
+  balls = filter(balls, function(b)
+    b:update(dt)
+    if b.destroyed then
+      if b.destroyed == 'left' then
         paddles[2]:score_up(); bl = bl + 1
       else
         paddles[1]:score_up(); br = br + 1
       end
-      balls[i] = nil
+      return false
     end
-  end
+    return true
+  end)
 
   -- add a ball for each one lost
   for i = 1, bl do balls[#balls+1] = Ball:new() end
@@ -55,4 +59,14 @@ function love.draw()
   for _,p in ipairs(paddles) do p:draw() end
   for _,b in ipairs(balls) do b:draw() end
   love.graphics.print(paddles[1].score..' : '..paddles[2].score, win_w/2, 25)
+end
+
+function filter(array, func)
+  local filtered = {}
+  for _,v in ipairs(array) do
+    if func(v) then
+      filtered[#filtered+1] = v
+    end
+  end
+  return filtered
 end
