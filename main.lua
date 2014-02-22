@@ -1,5 +1,6 @@
 require 'paddle'
 require 'ball'
+require 'util'
 paddles = {}
 balls = {}
 -- setmetatable(balls, {__index = {filter=filter}})
@@ -59,14 +60,4 @@ function love.draw()
   for _,p in ipairs(paddles) do p:draw() end
   for _,b in ipairs(balls) do b:draw() end
   love.graphics.print(paddles[1].score..' : '..paddles[2].score, win_w/2, 25)
-end
-
-function filter(array, func)
-  local filtered = {}
-  for _,v in ipairs(array) do
-    if func(v) then
-      filtered[#filtered+1] = v
-    end
-  end
-  return filtered
 end

@@ -6,10 +6,10 @@ Ball.static.default_dx = -200
 Ball.static.default_dy = 60
 Ball.static.speed_increment = 10
 
-function Ball:initialize(speed, dx, dy)
+function Ball:initialize(speed, dx, dy, x, y)
   local win_x,win_h = love.window.getDimensions()
-  self.x = win_x / 2
-  self.y = win_h / 2
+  self.x = x or win_x / 2
+  self.y = y or win_h / 2
   self.dx = dx or Ball.default_dx
   self.dy = dy or Ball.default_dy
 end
@@ -47,9 +47,9 @@ function Ball:update(dt)
 
   -- out-of-bounds check
   if self.x + Ball.radius < 1 then
-    self:destroy 'left'; return
+    self:destroy 'left'
   elseif self.x - Ball.radius > win_x then
-    self:destroy 'right'; return
+    self:destroy 'right'
   end
 end
 
